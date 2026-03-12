@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 
 const testimonials = [
   {
@@ -47,9 +47,18 @@ export function Testimonials() {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05, rootMargin: "0px 0px 50px 0px" }
     );
     observer.observe(el);
+
+    // Immediately trigger for elements already in viewport
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.querySelectorAll<HTMLElement>(".animate-on-scroll").forEach((child, i) => {
+        setTimeout(() => child.classList.add("in-view"), i * 150);
+      });
+    }
+
     return () => observer.disconnect();
   }, []);
 
@@ -69,6 +78,12 @@ export function Testimonials() {
               className="animate-on-scroll bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300"
               style={{ transitionDelay: `${i * 150}ms` }}
             >
+              {/* 5-star rating */}
+              <div className="flex items-center gap-0.5 mb-4">
+                {Array.from({ length: 5 }).map((_, s) => (
+                  <Star key={s} className="w-4 h-4 text-amber-400" fill="currentColor" />
+                ))}
+              </div>
               <Quote className="w-8 h-8 text-[#6C3AFF]/30 mb-4" />
               <p className="text-slate-700 leading-relaxed mb-6 text-[17px]">{`"${t.quote}"`}</p>
               <div className="flex items-center gap-3">

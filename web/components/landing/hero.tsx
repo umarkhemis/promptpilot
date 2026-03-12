@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { ArrowRight, Copy, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowRight, Copy, ExternalLink, RefreshCw, Sparkles } from "lucide-react";
 
 const BEFORE_TEXT = "write me a good ad for shoes";
 const AFTER_TEXT =
@@ -17,48 +17,60 @@ export function Hero() {
   const [typedAfter, setTypedAfter] = useState("");
   const [showTool, setShowTool] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const intervalsRef = useRef<ReturnType<typeof setInterval>[]>([]);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearAll = useCallback(() => {
+    intervalsRef.current.forEach(clearInterval);
+    timeoutsRef.current.forEach(clearTimeout);
+    intervalsRef.current = [];
+    timeoutsRef.current = [];
+  }, []);
+
+  const startAnimation = useCallback(() => {
+    clearAll();
+    setIsAnimating(true);
+    setTypedBefore("");
+    setShowAfter(false);
+    setTypedAfter("");
+    setShowTool(false);
+
+    let i = 0;
+    const typeInterval = setInterval(() => {
+      if (i < BEFORE_TEXT.length) {
+        setTypedBefore(BEFORE_TEXT.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(typeInterval);
+        const t1 = setTimeout(() => {
+          setShowAfter(true);
+          let j = 0;
+          const typeAfterInterval = setInterval(() => {
+            if (j < AFTER_TEXT.length) {
+              setTypedAfter(AFTER_TEXT.slice(0, j + 1));
+              j++;
+            } else {
+              clearInterval(typeAfterInterval);
+              const t2 = setTimeout(() => {
+                setShowTool(true);
+                setIsAnimating(false);
+              }, 300);
+              timeoutsRef.current.push(t2);
+            }
+          }, 18);
+          intervalsRef.current.push(typeAfterInterval);
+        }, 800);
+        timeoutsRef.current.push(t1);
+      }
+    }, 60);
+    intervalsRef.current.push(typeInterval);
+  }, [clearAll]);
 
   useEffect(() => {
-    const startAnimation = () => {
-      setIsAnimating(true);
-      setTypedBefore("");
-      setShowAfter(false);
-      setTypedAfter("");
-      setShowTool(false);
-
-      // Type the before text
-      let i = 0;
-      const typeInterval = setInterval(() => {
-        if (i < BEFORE_TEXT.length) {
-          setTypedBefore(BEFORE_TEXT.slice(0, i + 1));
-          i++;
-        } else {
-          clearInterval(typeInterval);
-          // Pause, then show after
-          setTimeout(() => {
-            setShowAfter(true);
-            let j = 0;
-            const typeAfterInterval = setInterval(() => {
-              if (j < AFTER_TEXT.length) {
-                setTypedAfter(AFTER_TEXT.slice(0, j + 1));
-                j++;
-              } else {
-                clearInterval(typeAfterInterval);
-                setTimeout(() => {
-                  setShowTool(true);
-                  setIsAnimating(false);
-                }, 300);
-              }
-            }, 18);
-          }, 800);
-        }
-      }, 60);
-    };
-
-    // Start after a brief delay
     const timeout = setTimeout(startAnimation, 800);
-    return () => clearTimeout(timeout);
-  }, []);
+    timeoutsRef.current.push(timeout);
+    return () => clearAll();
+  }, [startAnimation, clearAll]);
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden hero-gradient-bg pt-16">
@@ -125,7 +137,7 @@ export function Hero() {
         </div>
 
         {/* Hero Demo Card */}
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto animate-float">
           <div className="bg-[#1A1A2E]/80 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/50">
             {/* Card Header */}
             <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/5">
@@ -133,6 +145,16 @@ export function Hero() {
               <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
               <div className="w-3 h-3 rounded-full bg-green-500/70" />
               <span className="ml-2 text-xs text-slate-500 font-mono">promptpilot_demo</span>
+              {!isAnimating && (typedBefore || showTool) && (
+                <button
+                  onClick={startAnimation}
+                  className="ml-auto flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors px-2 py-0.5 rounded hover:bg-white/10"
+                  aria-label="Replay demo"
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  Replay
+                </button>
+              )}
             </div>
 
             <div className="p-6 space-y-4">

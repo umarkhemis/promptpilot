@@ -77,8 +77,12 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-[#0F0F1A]/98 backdrop-blur-md border-b border-white/10 px-4 pb-4">
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+        } bg-[#0F0F1A]/98 backdrop-blur-md border-b border-white/10`}
+      >
+        <div className="px-4 pb-4">
           <div className="flex flex-col gap-2 pt-2">
             {navLinks.map((link) => (
               <a
@@ -106,7 +110,7 @@ export function Navbar() {
             </div>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 }

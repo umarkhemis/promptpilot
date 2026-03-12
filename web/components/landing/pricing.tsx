@@ -77,9 +77,18 @@ export function Pricing() {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05, rootMargin: "0px 0px 50px 0px" }
     );
     observer.observe(el);
+
+    // Immediately trigger for elements already in viewport
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.querySelectorAll<HTMLElement>(".animate-on-scroll").forEach((child, i) => {
+        setTimeout(() => child.classList.add("in-view"), i * 150);
+      });
+    }
+
     return () => observer.disconnect();
   }, []);
 
@@ -145,7 +154,7 @@ export function Pricing() {
                 ))}
               </ul>
 
-              <Link href={plan.ctaHref} className={plan.ctaClass}>
+              <Link href={plan.ctaHref} className={`block text-center ${plan.ctaClass}`}>
                 {plan.cta}
               </Link>
             </div>

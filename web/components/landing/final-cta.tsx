@@ -10,6 +10,18 @@ export function FinalCta() {
         <div className="absolute top-1/2 right-1/4 w-80 h-80 cyan-blob opacity-30 blur-3xl -translate-y-1/2" />
       </div>
 
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute w-2 h-2 rounded-full bg-[#6C3AFF]/40 top-[15%] left-[10%] animate-float" style={{ animationDuration: "3.5s" }} />
+        <div className="absolute w-1.5 h-1.5 rounded-full bg-[#06B6D4]/40 top-[25%] left-[80%] animate-float" style={{ animationDuration: "4.2s", animationDelay: "0.5s" }} />
+        <div className="absolute w-2.5 h-2.5 rounded-full bg-[#8B5CF6]/30 top-[60%] left-[15%] animate-float" style={{ animationDuration: "5s", animationDelay: "1s" }} />
+        <div className="absolute w-1.5 h-1.5 rounded-full bg-[#06B6D4]/30 top-[70%] left-[75%] animate-float" style={{ animationDuration: "3.8s", animationDelay: "1.5s" }} />
+        <div className="absolute w-2 h-2 rounded-full bg-[#6C3AFF]/50 top-[40%] left-[90%] animate-float" style={{ animationDuration: "4.5s", animationDelay: "0.8s" }} />
+        <div className="absolute w-1 h-1 rounded-full bg-white/20 top-[80%] left-[40%] animate-float" style={{ animationDuration: "6s", animationDelay: "2s" }} />
+        <div className="absolute w-2 h-2 rounded-full bg-[#F59E0B]/20 top-[20%] left-[50%] animate-float" style={{ animationDuration: "4s", animationDelay: "0.3s" }} />
+        <div className="absolute w-1.5 h-1.5 rounded-full bg-[#8B5CF6]/40 top-[50%] left-[5%] animate-float" style={{ animationDuration: "5.5s", animationDelay: "1.2s" }} />
+      </div>
+
       <div className="max-w-3xl mx-auto text-center relative z-10">
         <h2 className="text-3xl sm:text-[40px] lg:text-5xl font-extrabold text-white mb-6">
           Ready to prompt{" "}

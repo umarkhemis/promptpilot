@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 const BEFORE_PROMPT = `"write me a good ad for shoes"`;
 const AFTER_PROMPT = `Write a 50-word Instagram ad for premium running shoes targeting fitness enthusiasts aged 18-30. Tone: energetic and aspirational. Include: product benefit, social proof element, and a clear CTA. Format: headline + body + 3 hashtags.`;
@@ -25,9 +25,19 @@ export function BeforeAfter() {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.05, rootMargin: "0px 0px 50px 0px" }
     );
     observer.observe(el);
+
+    // Immediately trigger for elements already in viewport
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.querySelectorAll<HTMLElement>(".animate-on-scroll-left, .animate-on-scroll-right").forEach((child, i) => {
+        setTimeout(() => child.classList.add("in-view"), i * 200);
+      });
+      setTimeout(() => setAfterVisible(true), 600);
+    }
+
     return () => observer.disconnect();
   }, []);
 
@@ -47,7 +57,7 @@ export function BeforeAfter() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 items-start mb-8">
+        <div className="relative grid md:grid-cols-2 gap-6 items-start mb-8">
           {/* Before */}
           <div className="animate-on-scroll-left">
             <div className="bg-[#1A1A2E]/80 backdrop-blur-sm border border-red-500/30 rounded-2xl overflow-hidden">
@@ -65,6 +75,11 @@ export function BeforeAfter() {
             </div>
           </div>
 
+          {/* Center sparkle — desktop (absolute), mobile (flex row) */}
+          <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-gradient-to-br from-[#6C3AFF] to-[#06B6D4] items-center justify-center shadow-lg shadow-purple-500/40 animate-float">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+
           {/* After */}
           <div className="animate-on-scroll-right">
             <div className="bg-[#1A1A2E]/80 backdrop-blur-sm border border-emerald-500/30 rounded-2xl overflow-hidden">
@@ -80,6 +95,13 @@ export function BeforeAfter() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Mobile sparkle between cards */}
+        <div className="flex md:hidden items-center justify-center -mt-2 mb-2">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6C3AFF] to-[#06B6D4] flex items-center justify-center shadow-lg shadow-purple-500/40 animate-float">
+            <Sparkles className="w-4 h-4 text-white" />
           </div>
         </div>
 
