@@ -1,6 +1,47 @@
-api/**/__pycache__
+# Python
+.venv/
+venv/
+env/
 **/__pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Environment
 .env
+.env.local
+.env.production
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database
+*.db
+*.sqlite
 api/test.db
+
+# Alembic
+api/alembic/versions/*.py
+!api/alembic/versions/.gitkeep
