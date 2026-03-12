@@ -56,9 +56,18 @@ export function Features() {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05, rootMargin: "0px 0px 50px 0px" }
     );
     observer.observe(el);
+
+    // Immediately trigger for elements already in viewport
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.querySelectorAll<HTMLElement>(".animate-on-scroll").forEach((child, i) => {
+        setTimeout(() => child.classList.add("in-view"), i * 150);
+      });
+    }
+
     return () => observer.disconnect();
   }, []);
 
@@ -85,7 +94,7 @@ export function Features() {
                 style={{ transitionDelay: `${i * 150}ms` }}
               >
                 <div
-                  className={`w-14 h-14 ${feature.iconBg} rounded-xl flex items-center justify-center mb-6`}
+                  className={`w-14 h-14 ${feature.iconBg} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}
                 >
                   <Icon className={`w-7 h-7 ${feature.iconColor}`} />
                 </div>

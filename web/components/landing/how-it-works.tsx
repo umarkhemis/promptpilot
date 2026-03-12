@@ -44,9 +44,18 @@ export function HowItWorks() {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05, rootMargin: "0px 0px 50px 0px" }
     );
     observer.observe(el);
+
+    // Immediately trigger for elements already in viewport
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.querySelectorAll<HTMLElement>(".animate-on-scroll").forEach((child, i) => {
+        setTimeout(() => child.classList.add("in-view"), i * 200);
+      });
+    }
+
     return () => observer.disconnect();
   }, []);
 
@@ -60,7 +69,7 @@ export function HowItWorks() {
 
         <div className="relative">
           {/* Connector line (desktop) */}
-          <div className="hidden md:block absolute top-12 left-[16.67%] right-[16.67%] h-0.5 border-t-2 border-dashed border-[#6C3AFF]/30" />
+          <div className="hidden md:block absolute top-14 left-[16.67%] right-[16.67%] h-0.5 border-t-2 border-dashed border-[#6C3AFF]/30" />
 
           <div className="grid md:grid-cols-3 gap-10 relative">
             {steps.map((step, i) => {

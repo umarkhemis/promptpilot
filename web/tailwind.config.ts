@@ -39,6 +39,7 @@ const config: Config = {
         "pulse-glow": "pulseGlow 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
+        "marquee": "marquee 30s linear infinite",
       },
       keyframes: {
         fadeIn: {
@@ -72,6 +73,10 @@ const config: Config = {
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
       backgroundImage: {

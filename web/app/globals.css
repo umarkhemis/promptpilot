@@ -88,6 +88,16 @@
   .delay-300 { transition-delay: 300ms; }
   .delay-400 { transition-delay: 400ms; }
   .delay-500 { transition-delay: 500ms; }
+
+  /* Marquee / infinite scroll */
+  .animate-marquee {
+    display: flex;
+    animation: marquee 30s linear infinite;
+  }
+
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
 }
 
 /* Typing animation for hero demo */
