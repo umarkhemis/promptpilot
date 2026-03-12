@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #0f172a;
+  }
+
+  .dark {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+  }
+
+  body {
+    @apply bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-50;
+  }
+}
+
+@layer utilities {
+  .typing-cursor::after {
+    content: '|';
+    @apply animate-pulse text-brand-500;
+  }
+}
