@@ -11,7 +11,7 @@ interface HistoryEntry {
   improved_prompt: string;
   intent?: string;
   recommended_tool?: string;
-  mode: string;
+  mode: "marketing" | "student";
   created_at: string;
 }
 

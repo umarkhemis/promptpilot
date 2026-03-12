@@ -18,7 +18,7 @@ interface ToolRecommendation {
 interface PromptStore {
   user: User | null;
   token: string | null;
-  mode: "marketing" | "student";
+  mode: "student" | "marketing";
   currentPrompt: string;
   isStreaming: boolean;
   output: string;
