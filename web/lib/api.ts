@@ -70,14 +70,20 @@ export async function improvePromptStream(
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const response = await fetch(`${API_URL}/api/prompts/improve/stream`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ raw_prompt: rawPrompt, mode, context }),
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}/api/prompts/improve/stream`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ raw_prompt: rawPrompt, mode, context }),
+    });
+  } catch (err) {
+    onError("Network error — could not reach server");
+    return;
+  }
 
   if (!response.ok) {
-    onError("Failed to start streaming");
+    onError(`Server error: ${response.status}`);
     return;
   }
 
@@ -89,31 +95,63 @@ export async function improvePromptStream(
 
   const decoder = new TextDecoder();
   let buffer = "";
+  let currentEvent = "message";
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split("\n");
-    buffer = lines.pop() || "";
-    for (const line of lines) {
-      if (line.startsWith("data: ") && line !== "data: {}") {
-        try {
-          const data = JSON.parse(line.slice(6));
-          if (data.content) onChunk(data.content);
-        } catch {
-          // ignore malformed SSE data lines
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+
+        if (trimmed === "") {
+          // blank line = end of SSE event, reset event type
+          currentEvent = "message";
+          continue;
         }
-      } else if (line.startsWith("event: done")) {
-        onDone();
-      } else if (line.startsWith("event: error")) {
-        onError("Streaming error");
+
+        if (trimmed.startsWith("event:")) {
+          currentEvent = trimmed.slice(6).trim();
+          if (currentEvent === "done") {
+            onDone();
+            return;
+          }
+          if (currentEvent === "error") {
+            onError("Streaming error from server");
+            return;
+          }
+          continue;
+        }
+
+        if (trimmed.startsWith("data:")) {
+          const raw = trimmed.slice(5).trim();
+          if (!raw || raw === "{}") continue;
+          try {
+            const data = JSON.parse(raw);
+            if (data.content) onChunk(data.content);
+            if (data.error) { onError(data.error); return; }
+          } catch {
+            // not JSON — treat as raw text chunk
+            if (raw) onChunk(raw);
+          }
+          continue;
+        }
       }
     }
+  } catch (err) {
+    onError(err instanceof Error ? err.message : "Stream read error");
+    return;
+  } finally {
+    reader.releaseLock();
   }
+
   onDone();
 }
-
 export async function getTemplates(mode?: string, category?: string) {
   const params = new URLSearchParams();
   if (mode) params.set("mode", mode);

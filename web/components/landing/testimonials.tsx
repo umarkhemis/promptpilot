@@ -1,7 +1,7 @@
+
 "use client";
 
-import { useRef, useEffect } from "react";
-import { Quote, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 const testimonials = [
   {
@@ -10,15 +10,15 @@ const testimonials = [
     name: "Sarah M.",
     role: "Marketing Manager",
     initials: "SM",
-    color: "from-purple-600 to-purple-400",
+    hue: 258,
   },
   {
     quote:
-      "The tool recommendations are spot-on. I didn't know Perplexity existed until PromptPilot suggested it for my research.",
+      "The tool recommendations are spot-on. I didn't know Perplexity existed until Promptify suggested it for my research.",
     name: "James K.",
     role: "PhD Student",
     initials: "JK",
-    color: "from-cyan-600 to-cyan-400",
+    hue: 192,
   },
   {
     quote:
@@ -26,81 +26,167 @@ const testimonials = [
     name: "David L.",
     role: "Agency Owner",
     initials: "DL",
-    color: "from-amber-600 to-amber-400",
+    hue: 38,
+  },
+  {
+    quote:
+      "Finally, I can describe what I want in plain English and get a prompt that actually works. Game changer.",
+    name: "Aisha R.",
+    role: "Content Strategist",
+    initials: "AR",
+    hue: 280,
+  },
+  {
+    quote:
+      "Went from getting mediocre AI output to professional-grade copy in under a minute. Incredible tool.",
+    name: "Marcus G.",
+    role: "Freelance Copywriter",
+    initials: "MG",
+    hue: 210,
+  },
+  {
+    quote:
+      "The student mode helped me write better research prompts. My thesis research time dropped by half.",
+    name: "Priya S.",
+    role: "Graduate Researcher",
+    initials: "PS",
+    hue: 160,
   },
 ];
 
-export function Testimonials() {
-  const ref = useRef<HTMLDivElement>(null);
+// Duplicate for seamless infinite loop
+const ITEMS = [...testimonials, ...testimonials];
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.querySelectorAll<HTMLElement>(".animate-on-scroll").forEach((child, i) => {
-              setTimeout(() => child.classList.add("in-view"), i * 150);
-            });
-            observer.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.05, rootMargin: "0px 0px 50px 0px" }
-    );
-    observer.observe(el);
-
-    // Immediately trigger for elements already in viewport
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight) {
-      el.querySelectorAll<HTMLElement>(".animate-on-scroll").forEach((child, i) => {
-        setTimeout(() => child.classList.add("in-view"), i * 150);
-      });
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
+function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
   return (
-    <section className="py-24 px-4 bg-white">
-      <div className="max-w-7xl mx-auto" ref={ref}>
-        <div className="text-center mb-16 animate-on-scroll">
-          <h2 className="text-3xl sm:text-[40px] font-bold text-slate-900 mb-4">
-            What our users say
-          </h2>
-        </div>
+    <div
+      className="flex-shrink-0 w-[340px] rounded-2xl p-6 flex flex-col gap-4"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      {/* Stars */}
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star key={i} className="w-3.5 h-3.5 text-amber-400" fill="currentColor" />
+        ))}
+      </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((t, i) => (
-            <div
-              key={t.name}
-              className="animate-on-scroll bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300"
-              style={{ transitionDelay: `${i * 150}ms` }}
-            >
-              {/* 5-star rating */}
-              <div className="flex items-center gap-0.5 mb-4">
-                {Array.from({ length: 5 }).map((_, s) => (
-                  <Star key={s} className="w-4 h-4 text-amber-400" fill="currentColor" />
-                ))}
-              </div>
-              <Quote className="w-8 h-8 text-[#6C3AFF]/30 mb-4" />
-              <p className="text-slate-700 leading-relaxed mb-6 text-[17px]">{`"${t.quote}"`}</p>
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-white text-sm font-bold`}
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900 text-sm">{t.name}</p>
-                  <p className="text-slate-500 text-xs">{t.role}</p>
-                </div>
-              </div>
-            </div>
+      {/* Quote */}
+      <p className="text-sm leading-relaxed flex-1" style={{ color: "#94a3b8" }}>
+        &ldquo;{t.quote}&rdquo;
+      </p>
+
+      {/* Author */}
+      <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div
+          className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+          style={{ background: `hsl(${t.hue}, 60%, 48%)` }}
+        >
+          {t.initials}
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-white">{t.name}</p>
+          <p className="text-xs" style={{ color: "#475569" }}>{t.role}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Testimonials() {
+  return (
+    <section
+      className="relative py-28 overflow-hidden"
+      style={{ background: "#0B0B16" }}
+    >
+      {/* Background */}
+      <div className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] rounded-full blur-[120px]"
+          style={{ background: "radial-gradient(ellipse, rgba(108,58,255,0.1) 0%, transparent 70%)" }}
+        />
+      </div>
+
+      {/* Header */}
+      <div className="relative text-center mb-16 px-4">
+        <span
+          className="inline-block text-xs font-semibold tracking-[0.2em] uppercase mb-4 px-3 py-1 rounded-full border"
+          style={{ color: "#06B6D4", borderColor: "rgba(6,182,212,0.3)", background: "rgba(6,182,212,0.07)" }}
+        >
+          Testimonials
+        </span>
+        <h2
+          className="text-4xl sm:text-5xl font-bold text-white mb-4"
+          style={{ letterSpacing: "-0.02em" }}
+        >
+          What our users say
+        </h2>
+        <p className="text-lg" style={{ color: "#475569" }}>
+          Trusted by marketers, students, and creators worldwide
+        </p>
+      </div>
+
+      {/* Row 1 — scrolls left */}
+      <div className="relative mb-4">
+        {/* Edge fades */}
+        <div
+          className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 z-10"
+          style={{ background: "linear-gradient(to right, #0B0B16, transparent)" }}
+        />
+        <div
+          className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
+          style={{ background: "linear-gradient(to left, #0B0B16, transparent)" }}
+        />
+
+        <div
+          className="flex gap-4 w-max"
+          style={{ animation: "marquee-left 35s linear infinite" }}
+        >
+          {ITEMS.map((t, i) => (
+            <TestimonialCard key={i} t={t} />
           ))}
         </div>
       </div>
+
+      {/* Row 2 — scrolls right (reversed) */}
+      <div className="relative">
+        <div
+          className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 z-10"
+          style={{ background: "linear-gradient(to right, #0B0B16, transparent)" }}
+        />
+        <div
+          className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
+          style={{ background: "linear-gradient(to left, #0B0B16, transparent)" }}
+        />
+
+        <div
+          className="flex gap-4 w-max"
+          style={{ animation: "marquee-right 40s linear infinite" }}
+        >
+          {[...ITEMS].reverse().map((t, i) => (
+            <TestimonialCard key={i} t={t} />
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes marquee-left {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-right {
+          0%   { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
+        }
+
+        /* Pause on hover for accessibility */
+        .flex:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 }

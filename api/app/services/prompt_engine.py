@@ -2,8 +2,21 @@ import asyncio
 import json
 from app.services.llm_client import LLMClient
 from app.services.tool_router import recommend
+from app.services.streaming import format_sse, format_sse_done, format_sse_error
 
-INTENTS = ["writing", "research", "image", "coding", "study", "seo", "social_media", "email"]
+
+INTENTS = [
+    "writing", "email", "blog", "copywriting",
+    "research", "study", "academic",
+    "coding", "debugging",
+    "image", "logo", "design", "illustration",
+    "video", "video_avatar", "video_editing",
+    "audio", "voiceover", "music", "podcast",
+    "seo", "social_media", "ads",
+    "business_name", "business_plan", "presentation", "spreadsheet",
+    "summarization", "translation", "transcription",
+    "chatbot", "automation",
+]
 
 
 def _build_system_prompt(intent: str, mode: str, context: str = None) -> str:
@@ -17,17 +30,37 @@ def _build_system_prompt(intent: str, mode: str, context: str = None) -> str:
     return base
 
 
+
+
 async def classify_intent(raw_prompt: str, mode: str, llm: LLMClient) -> str:
-    messages = [
-        {
-            "role": "system",
-            "content": f"Classify the intent of the user prompt into exactly one of: {', '.join(INTENTS)}. Reply with only the intent word.",
-        },
-        {"role": "user", "content": raw_prompt},
-    ]
-    result = await llm.complete("gpt-4o-mini", messages, max_tokens=10)
-    intent = result.strip().lower()
-    return intent if intent in INTENTS else "writing"
+        messages = [
+            {
+                "role": "system",
+                "content": f"""Classify the user's prompt into exactly one intent from this list:
+    {', '.join(INTENTS)}
+
+    Rules:
+    - image/photo/picture generation → image
+    - logo creation → logo
+    - video creation/editing → video
+    - voiceover/narration/text-to-speech → voiceover
+    - background music/song/jingle → music
+    - business name ideas → business_name
+    - slide deck/presentation → presentation
+    - social media post/caption → social_media
+    - ad/advertisement copy → ads
+    - SEO article/keywords → seo
+    - academic paper/thesis → academic
+    - code/programming → coding
+
+    Reply with ONLY the intent word, nothing else.""",
+            },
+            {"role": "user", "content": raw_prompt},
+        ]
+        result = await llm.complete("llama-3.1-8b-instant", messages, max_tokens=10)
+        # result = await llm.complete("gpt-4o-mini", messages, max_tokens=10)
+        intent = result.strip().lower()
+        return intent if intent in INTENTS else "writing"
 
 
 async def get_clarifying_questions(raw_prompt: str, mode: str, llm: LLMClient) -> list[str]:
@@ -38,7 +71,8 @@ async def get_clarifying_questions(raw_prompt: str, mode: str, llm: LLMClient) -
         },
         {"role": "user", "content": raw_prompt},
     ]
-    result = await llm.complete("gpt-4o-mini", messages, max_tokens=100)
+    result = await llm.complete("llama-3.1-8b-instant", messages, max_tokens=100)
+    # result = await llm.complete("gpt-4o-mini", messages, max_tokens=100)
     try:
         questions = json.loads(result.strip())
         return questions if isinstance(questions, list) else []
@@ -52,7 +86,8 @@ async def improve(raw_prompt: str, intent: str, mode: str, context: str, llm: LL
         {"role": "system", "content": system},
         {"role": "user", "content": f"Improve this prompt for better AI results:\n\n{raw_prompt}"},
     ]
-    return await llm.complete("gpt-4o", messages, max_tokens=500)
+    return await llm.complete("llama-3.1-8b-instant", messages, max_tokens=500)
+    # return await llm.complete("gpt-4o", messages, max_tokens=500)
 
 
 async def improve_full(raw_prompt: str, mode: str, context: str, llm: LLMClient) -> dict:
@@ -72,13 +107,22 @@ async def improve_full(raw_prompt: str, mode: str, context: str, llm: LLMClient)
 
 
 async def improve_stream(raw_prompt: str, mode: str, context: str, llm: LLMClient):
+    print(f"improve_stream called: prompt='{raw_prompt[:30]}' mode={mode}")  # ← add
     intent = await classify_intent(raw_prompt, mode, llm)
-    system = _build_system_prompt(intent, mode, context)
+    print(f"intent classified: {intent}")  # ← add
+
+
+async def improve_stream(raw_prompt: str, mode: str, context: str, llm: LLMClient):
+    system = f"""You are an expert prompt engineer. 
+    {'Focus on persuasive, brand-aware, conversion-optimized prompts.' if mode == 'marketing' else 'Focus on clear, structured, academic prompts that aid learning.'}
+    {'Context: ' + context if context else ''}"""
+
     messages = [
         {"role": "system", "content": system},
         {"role": "user", "content": f"Improve this prompt for better AI results:\n\n{raw_prompt}"},
     ]
-    async for chunk in llm.stream("gpt-4o", messages, max_tokens=500):
+    # async for chunk in llm.stream("gpt-4o", messages, max_tokens=500):
+    async for chunk in llm.stream("llama-3.1-8b-instant", messages, max_tokens=500):
         yield chunk
 
 
@@ -90,4 +134,6 @@ async def format_for_tool(improved_prompt: str, tool: str, llm: LLMClient) -> st
         },
         {"role": "user", "content": improved_prompt},
     ]
-    return await llm.complete("gpt-4o-mini", messages, max_tokens=500)
+    return await llm.complete("llama-3.1-8b-instant", messages, max_tokens=500)
+    # return await llm.complete("gpt-4o-mini", messages, max_tokens=500)
+

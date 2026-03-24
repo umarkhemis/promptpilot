@@ -63,6 +63,19 @@ async def improve_prompt_stream(
                 yield format_sse(chunk)
             yield format_sse_done()
         except Exception as exc:
+            import traceback
+            print("STREAM ERROR:", traceback.format_exc())  # ← added
             yield format_sse_error(str(exc))
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
+

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useRef, useEffect } from "react";
@@ -61,7 +62,7 @@ const plans = [
   },
 ];
 
-export function Pricing() {
+export default function Pricing() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

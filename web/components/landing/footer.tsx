@@ -31,14 +31,17 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-12">
           {/* Brand */}
           <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6C3AFF] to-[#06B6D4] flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-xl text-white">PromptPilot</span>
-            </Link>
+          <Link href="/" className="flex items-center gap-2 group">
+            <img
+              src="/prompt_logo.jpg"
+              alt="Promptify Logo"
+              // className="w-8 h-8 rounded-lg object-cover"
+              className="w-8 h-8 rounded-full object-cover"
+            />
+            <span className="font-bold text-xl text-white">Promptify</span>
+          </Link>
             <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-              Better prompts. Right AI tool. Perfect results — every time.
+              Better prompts. Right AI tool. Perfect results - every time.
             </p>
             <div className="flex items-center gap-3 mt-6">
               {socialLinks.map(({ icon: Icon, label, href }) => (
@@ -78,7 +81,7 @@ export function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-600 text-sm">
-            © 2026 PromptPilot. All rights reserved.
+            © 2026 Promptify. All rights reserved.
           </p>
         </div>
       </div>

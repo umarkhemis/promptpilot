@@ -21,6 +21,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 app.include_router(auth.router, prefix="/api")
@@ -33,3 +34,5 @@ app.include_router(history.router, prefix="/api")
 @app.get("/api/health")
 async def health_check():
     return {"status": "ok"}
+
+print(f"CORS origin: '{settings.FRONTEND_URL}'")
