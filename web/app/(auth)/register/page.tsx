@@ -70,7 +70,13 @@ export default function RegisterPage() {
 
         {/* Logo */}
         <div className="relative flex items-center gap-3">
-          <img src="/prompt_logo.jpg" alt="PromptPilot" className="w-9 h-9 rounded-full object-cover" />
+          <Link href="/" className="flex items-center gap-3 min-w-0">
+              <img
+                src="/prompt_logo.jpg"
+                alt="PromptPilot"
+                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+              />            
+            </Link>
           <span className="font-bold text-xl text-white">Promptify</span>
         </div>
 

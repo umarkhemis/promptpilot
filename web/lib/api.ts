@@ -78,7 +78,7 @@ export async function improvePromptStream(
       body: JSON.stringify({ raw_prompt: rawPrompt, mode, context }),
     });
   } catch (err) {
-    onError("Network error — could not reach server");
+    onError("Network error - could not reach server");
     return;
   }
 
