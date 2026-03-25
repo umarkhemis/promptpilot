@@ -130,7 +130,7 @@ export default function RegisterPage() {
         <div className="relative w-full max-w-sm">
 
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
+          <div className="lg:hidden flex items-center gap-2 mb-10">
             <img src="/prompt_logo.jpg" alt="PromptPilot" className="w-8 h-8 rounded-full object-cover" />
             <span className="font-bold text-lg text-white">PromptPilot</span>
           </div>

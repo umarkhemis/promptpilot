@@ -52,7 +52,7 @@ export function BeforeAfter() {
               setPhase("resetting");
               const t4 = setTimeout(() => runCycle(), 600);
               timeoutsRef.current.push(t4);
-            }, 5000);
+            }, 10000);
             timeoutsRef.current.push(t3);
           }, 400);
           timeoutsRef.current.push(t2);
@@ -117,7 +117,7 @@ export function BeforeAfter() {
         />
       </div>
 
-      <div className="relative max-w-5xl mx-auto" ref={ref}>
+      <div className="relative max-w-5xl mx-auto mb-8" ref={ref}>
         {/* Header */}
         <div
           className="text-center mb-16"
@@ -321,7 +321,7 @@ export function BeforeAfter() {
               <span className="text-sm" style={{ color: "#c4b5fd" }}>
                 Recommended:{" "}
                 <span className="font-semibold text-white">ChatGPT</span>
-                <span style={{ color: "#64748b" }}> — Best for fast ad copy variants</span>
+                <span style={{ color: "#64748b" }}> - Best for fast ad copy variants</span>
               </span>
               <ArrowRight className="w-4 h-4" style={{ color: "#6C3AFF" }} />
             </div>
@@ -345,7 +345,7 @@ export function BeforeAfter() {
             />
           </div>
           <span className="text-xs font-mono" style={{ color: "#334155" }}>
-            {phase === "done" ? "replaying in 5s..." : phase === "idle" ? "loading..." : "improving..."}
+            {phase === "done" ? "replaying in 10s..." : phase === "idle" ? "loading..." : "improving..."}
           </span>
         </div>
       </div>

@@ -18,7 +18,7 @@ import Link from "next/link";
 
 // ─── Theme hook ───────────────────────────────────────────────────────────────
 function useTheme() {
-  // Read from DOM immediately — no flicker
+  
   const [dark, setDark] = useState(
     () => document.documentElement.classList.contains("dark")
   );

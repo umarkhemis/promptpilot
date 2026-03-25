@@ -14,6 +14,7 @@ const steps = [
     accent: "#6C3AFF",
     glow: "rgba(108,58,255,0.18)",
     border: "rgba(108,58,255,0.25)",
+    rgb: "108,58,255",
   },
   {
     number: "02",
@@ -24,6 +25,7 @@ const steps = [
     accent: "#06B6D4",
     glow: "rgba(6,182,212,0.15)",
     border: "rgba(6,182,212,0.22)",
+    rgb: "6,182,212",
   },
   {
     number: "03",
@@ -34,6 +36,7 @@ const steps = [
     accent: "#a78bfa",
     glow: "rgba(167,139,250,0.15)",
     border: "rgba(167,139,250,0.22)",
+    rgb: "167,139,250",
   },
 ];
 
@@ -46,7 +49,7 @@ export function HowItWorks() {
 
     const trigger = () => {
       el.querySelectorAll<HTMLElement>(".animate-on-scroll").forEach((child, i) => {
-        setTimeout(() => child.classList.add("in-view"), i * 200);
+        setTimeout(() => child.classList.add("in-view"), i * 150);
       });
     };
 
@@ -69,7 +72,7 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative py-28 px-4 overflow-hidden"
+      className="relative py-20 px-4 overflow-hidden"
       style={{ background: "#0B0B16" }}
     >
       {/* Background */}
@@ -90,7 +93,7 @@ export function HowItWorks() {
 
       <div className="relative max-w-5xl mx-auto" ref={ref}>
         {/* Header */}
-        <div className="text-center mb-20 animate-on-scroll">
+        <div className="text-center mb-14 animate-on-scroll">
           <span
             className="inline-block text-xs font-semibold tracking-[0.2em] uppercase mb-4 px-3 py-1 rounded-full border"
             style={{ color: "#06B6D4", borderColor: "rgba(6,182,212,0.3)", background: "rgba(6,182,212,0.07)" }}
@@ -118,7 +121,6 @@ export function HowItWorks() {
               background: "linear-gradient(90deg, rgba(108,58,255,0.4), rgba(6,182,212,0.4), rgba(167,139,250,0.4))",
             }}
           >
-            {/* Arrow dots on connector */}
             <div className="absolute left-1/4 top-1/2 -translate-y-1/2 -translate-x-1/2">
               <ArrowRight className="w-3 h-3" style={{ color: "rgba(108,58,255,0.5)" }} />
             </div>
@@ -133,11 +135,10 @@ export function HowItWorks() {
               <div
                 key={step.number}
                 className="animate-on-scroll flex flex-col items-center text-center group"
-                style={{ transitionDelay: `${i * 200}ms` }}
+                style={{ transitionDelay: `${i * 150}ms` }}
               >
                 {/* Icon circle */}
-                <div className="relative mb-8">
-                  {/* Outer glow ring */}
+                <div className="relative mb-6">
                   <div
                     className="absolute inset-0 rounded-2xl blur-[16px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{ background: step.glow, transform: "scale(1.3)" }}
@@ -145,7 +146,7 @@ export function HowItWorks() {
                   <div
                     className="relative w-24 h-24 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-1"
                     style={{
-                      background: `rgba(${step.accent === "#6C3AFF" ? "108,58,255" : step.accent === "#06B6D4" ? "6,182,212" : "167,139,250"}, 0.1)`,
+                      background: `rgba(${step.rgb}, 0.1)`,
                       border: `1px solid ${step.border}`,
                       boxShadow: `0 8px 32px ${step.glow}`,
                     }}
@@ -165,7 +166,6 @@ export function HowItWorks() {
                   </div>
                 </div>
 
-                {/* Step number label */}
                 <span
                   className="text-xs font-semibold tracking-[0.15em] uppercase mb-2"
                   style={{ color: step.accent, opacity: 0.7 }}
@@ -174,7 +174,7 @@ export function HowItWorks() {
                 </span>
 
                 <h3
-                  className="text-xl font-bold text-white mb-3"
+                  className="text-xl font-bold text-white mb-2"
                   style={{ letterSpacing: "-0.01em" }}
                 >
                   {step.title}
@@ -187,8 +187,8 @@ export function HowItWorks() {
           })}
         </div>
 
-        {/* Bottom CTA nudge */}
-        <div className="text-center mt-20 animate-on-scroll">
+        {/* Bottom CTA */}
+        <div className="text-center mt-16 animate-on-scroll">
           <p className="text-sm mb-4" style={{ color: "#334155" }}>
             Ready to try it yourself?
           </p>
@@ -213,6 +213,20 @@ export function HowItWorks() {
           </a>
         </div>
       </div>
+
+      <style>{`
+        .animate-on-scroll {
+          opacity: 0;
+          transform: translateY(24px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .animate-on-scroll.in-view {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      `}</style>
     </section>
   );
 }
+
+

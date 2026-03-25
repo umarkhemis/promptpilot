@@ -67,8 +67,8 @@ export default function LoginPage() {
         </div>
 
         {/* Logo */}
-        <div className="relative flex items-center gap-3">
-          <img src="/prompt_logo.jpg" alt="PromptPilot" className="w-9 h-9 rounded-full object-cover" />
+        <div className="relative flex items-center gap-3 ">
+          <img src="/prompt_logo.jpg" alt="PromptPilot" className="w-9 h-9 rounded-full object-cover " />
           <span className="font-bold text-xl text-white">Promptify</span>
         </div>
 
@@ -133,7 +133,7 @@ export default function LoginPage() {
         <div className="relative w-full max-w-sm">
 
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
+          <div className="lg:hidden flex items-center gap-2 mb-10">
             
             <Link href="/" className="flex items-center gap-3 min-w-0">
               <img

@@ -15,12 +15,12 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
       <Hero />
-      <SocialProof />
+      {/* <SocialProof /> */}
       <Features />
-      <BeforeAfter />
+      {/* <BeforeAfter /> */}
       <HowItWorks />
       <TwoModes />
-      <Testimonials />
+      {/* <Testimonials /> */}
       {/* <Pricing /> */}
       <FinalCta />
       <Footer />
