@@ -5,7 +5,7 @@ from pydantic import ConfigDict
 class Settings(BaseSettings):
     model_config = ConfigDict(env_file=".env")
 
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost/promptpilot"
+    DATABASE_URL: str = "postgresql+asyncpg://prompt:Promptify_password@localhost/prompt_db"
     LLM_API_KEY: str = ""
     LLM_BASE_URL: str = "https://api.openai.com/v1"
     JWT_SECRET: str = "changeme-secret"

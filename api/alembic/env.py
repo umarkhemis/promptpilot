@@ -11,7 +11,11 @@ from alembic import context
 from app.models.user import Base  # noqa: F401
 from app.models.prompt import Prompt  # noqa: F401
 from app.models.template import Template  # noqa: F401
+from app.models.community_prompts import CommunityPrompt, CommunitySave, CommunityUpvote
+from app.models.packs import Pack, PackPrompt, UserPackInstall
+from app.models.workspace import Workspace, WorkspaceMember
 from app.config import settings
+
 
 # this is the Alembic Config object
 config = context.config

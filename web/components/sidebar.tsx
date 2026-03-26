@@ -5,17 +5,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FileText, History, Settings,
-  ChevronLeft, ChevronRight, Wand2, LogOut, Sun, Moon,
+  ChevronLeft, ChevronRight, Wand2, LogOut, Sun, Moon, Package, Globe,  Users
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
 
+
+
 const NAV_ITEMS = [
-  { href: "/dashboard",  label: "Workspace",  icon: Wand2          },
-  { href: "/templates",  label: "Templates",  icon: FileText        },
-  { href: "/history",    label: "History",    icon: History         },
-  { href: "/settings",   label: "Settings",   icon: Settings        },
+  { href: "/dashboard",   label: "Prompt Workspace",   icon: Wand2       },
+  { href: "/templates",   label: "Templates",   icon: FileText    },
+  { href: "/history",     label: "History",     icon: History     },
+  { href: "/packs",       label: "Packs",       icon: Package     },
+  { href: "/community",   label: "Community",   icon: Globe       },
+  { href: "/workspaces",  label: "Workspaces",  icon: Users       },
+  { href: "/settings",    label: "Settings",    icon: Settings    },
 ];
 
 // ─── Theme hook (shared with dashboard) ──────────────────────────────────────

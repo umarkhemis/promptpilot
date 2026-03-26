@@ -58,7 +58,7 @@ class PackPromptCreate(BaseModel):
 
 
 class InstallRequest(BaseModel):
-    workspace_id: Optional[str] = None   # omit for personal install
+    workspace_id: Optional[str] = None   
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────

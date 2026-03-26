@@ -169,3 +169,240 @@ export async function getToolRecommendation(intent: string) {
   const res = await fetchWithAuth(`/api/tools/recommend?intent=${encodeURIComponent(intent)}`);
   return res.json();
 }
+
+export interface Workspace {
+  id: string;
+  name: string;
+  owner_id: string;
+  plan: string;
+  invite_code: string | null;
+  created_at: string;
+  member_count: number;
+  role: string;
+}
+ 
+export interface WorkspaceMember {
+  user_id: string;
+  email: string;
+  role: string;
+  joined_at: string;
+}
+ 
+export interface Pack {
+  id: string;
+  title: string;
+  description: string | null;
+  category: string;
+  mode: string;
+  is_free: boolean;
+  cover_emoji: string | null;
+  prompt_count: number;
+  is_installed: boolean;
+  created_at: string;
+}
+ 
+export interface PackPrompt {
+  id: string;
+  title: string;
+  description: string | null;
+  content: string;
+  category: string;
+  sort_order: number;
+}
+ 
+export interface PackDetail extends Pack {
+  prompts: PackPrompt[];
+}
+ 
+export interface CommunityPrompt {
+  id: string;
+  user_id: string;
+  author_email: string;
+  title: string;
+  description: string | null;
+  content: string;
+  category: string;
+  mode: string;
+  upvote_count: number;
+  save_count: number;
+  fork_count: number;
+  forked_from: string | null;
+  is_public: boolean;
+  has_upvoted: boolean;
+  has_saved: boolean;
+  created_at: string;
+}
+ 
+export interface UserProfile {
+  user_id: string;
+  author_email: string;
+  total_upvotes: number;
+  total_forks: number;
+  published_count: number;
+  prompts: CommunityPrompt[];
+}
+ 
+// ── Workspaces ────────────────────────────────────────────────────────────────
+ 
+export async function getMyWorkspaces(): Promise<Workspace[]> {
+  const res = await fetchWithAuth("/api/workspaces/me");
+  return res.json();
+}
+ 
+export async function createWorkspace(name: string): Promise<Workspace> {
+  const res = await fetchWithAuth("/api/workspaces", {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
+  return res.json();
+}
+ 
+export async function getWorkspace(id: string): Promise<Workspace> {
+  const res = await fetchWithAuth(`/api/workspaces/${id}`);
+  return res.json();
+}
+ 
+export async function deleteWorkspace(id: string): Promise<void> {
+  await fetchWithAuth(`/api/workspaces/${id}`, { method: "DELETE" });
+}
+ 
+export async function getWorkspaceMembers(id: string): Promise<WorkspaceMember[]> {
+  const res = await fetchWithAuth(`/api/workspaces/${id}/members`);
+  return res.json();
+}
+ 
+export async function removeMember(workspaceId: string, userId: string): Promise<void> {
+  await fetchWithAuth(`/api/workspaces/${workspaceId}/members/${userId}`, { method: "DELETE" });
+}
+ 
+export async function updateMemberRole(
+  workspaceId: string,
+  userId: string,
+  role: string
+): Promise<WorkspaceMember> {
+  const res = await fetchWithAuth(`/api/workspaces/${workspaceId}/members/${userId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ role }),
+  });
+  return res.json();
+}
+ 
+export async function regenerateInvite(workspaceId: string): Promise<Workspace> {
+  const res = await fetchWithAuth(`/api/workspaces/${workspaceId}/invite`, { method: "POST" });
+  return res.json();
+}
+ 
+export async function joinWorkspace(inviteCode: string): Promise<Workspace> {
+  const res = await fetchWithAuth(`/api/workspaces/join/${inviteCode}`, { method: "POST" });
+  return res.json();
+}
+ 
+// ── Packs ─────────────────────────────────────────────────────────────────────
+ 
+export async function getPacks(filters?: {
+  category?: string;
+  mode?: string;
+  is_free?: boolean;
+}): Promise<Pack[]> {
+  const params = new URLSearchParams();
+  if (filters?.category) params.set("category", filters.category);
+  if (filters?.mode) params.set("mode", filters.mode);
+  if (filters?.is_free !== undefined) params.set("is_free", String(filters.is_free));
+  const res = await fetchWithAuth(`/api/packs?${params.toString()}`);
+  return res.json();
+}
+ 
+export async function getPack(id: string): Promise<PackDetail> {
+  const res = await fetchWithAuth(`/api/packs/${id}`);
+  return res.json();
+}
+ 
+export async function getInstalledPacks(workspaceId?: string): Promise<PackDetail[]> {
+  const params = workspaceId ? `?workspace_id=${workspaceId}` : "";
+  const res = await fetchWithAuth(`/api/packs/installed${params}`);
+  return res.json();
+}
+ 
+export async function installPack(packId: string, workspaceId?: string): Promise<Pack> {
+  const res = await fetchWithAuth(`/api/packs/${packId}/install`, {
+    method: "POST",
+    body: JSON.stringify({ workspace_id: workspaceId ?? null }),
+  });
+  return res.json();
+}
+ 
+export async function uninstallPack(packId: string, workspaceId?: string): Promise<void> {
+  const params = workspaceId ? `?workspace_id=${workspaceId}` : "";
+  await fetchWithAuth(`/api/packs/${packId}/uninstall${params}`, { method: "DELETE" });
+}
+ 
+// ── Community ─────────────────────────────────────────────────────────────────
+ 
+export async function getCommunityPrompts(params?: {
+  category?: string;
+  mode?: string;
+  sort?: "top" | "new";
+  page?: number;
+}): Promise<CommunityPrompt[]> {
+  const p = new URLSearchParams();
+  if (params?.category) p.set("category", params.category);
+  if (params?.mode) p.set("mode", params.mode);
+  if (params?.sort) p.set("sort", params.sort);
+  if (params?.page) p.set("page", String(params.page));
+  const res = await fetchWithAuth(`/api/community?${p.toString()}`);
+  return res.json();
+}
+ 
+export async function getCommunityPrompt(id: string): Promise<CommunityPrompt> {
+  const res = await fetchWithAuth(`/api/community/${id}`);
+  return res.json();
+}
+
+ 
+export async function getMyCommunityPrompts(): Promise<CommunityPrompt[]> {
+  const res = await fetchWithAuth("/api/community/my");
+  return res.json();
+}
+ 
+export async function getSavedPrompts(): Promise<CommunityPrompt[]> {
+  const res = await fetchWithAuth("/api/community/saved");
+  return res.json();
+}
+ 
+export async function publishPrompt(data: {
+  title: string;
+  description?: string;
+  content: string;
+  category: string;
+  mode: string;
+}): Promise<CommunityPrompt> {
+  const res = await fetchWithAuth("/api/community", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+ 
+export async function upvotePrompt(id: string): Promise<CommunityPrompt> {
+  const res = await fetchWithAuth(`/api/community/${id}/upvote`, { method: "POST" });
+  return res.json();
+}
+ 
+export async function savePrompt(id: string): Promise<CommunityPrompt> {
+  const res = await fetchWithAuth(`/api/community/${id}/save`, { method: "POST" });
+  return res.json();
+}
+ 
+export async function forkPrompt(id: string): Promise<CommunityPrompt> {
+  const res = await fetchWithAuth(`/api/community/${id}/fork`, { method: "POST" });
+  return res.json();
+}
+ 
+export async function getUserProfile(userId: string): Promise<UserProfile> {
+  const res = await fetchWithAuth(`/api/community/profile/${userId}`);
+  return res.json();
+}
+ 
+export async function deleteCommunityPrompt(id: string): Promise<void> {
+  await fetchWithAuth(`/api/community/${id}`, { method: "DELETE" });
+}

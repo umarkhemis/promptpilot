@@ -7,7 +7,8 @@ from pydantic import BaseModel
 
 from app.dependencies import get_db, get_current_user
 from app.models.user import User
-from app.models.community_lib import CommunityPrompt, CommunityUpvote, CommunitySave
+from app.models.community_prompts import CommunityPrompt, CommunityUpvote, CommunitySave
+# from api.app.models.community_prompts import CommunityPrompt, CommunityUpvote, CommunitySave
 
 router = APIRouter(prefix="/community", tags=["community"])
 
