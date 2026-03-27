@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FileText, History, Settings,
-  ChevronLeft, ChevronRight, Wand2, LogOut, Sun, Moon, Package, Globe,  Users
+  ChevronLeft, ChevronRight, Wand2, LogOut, Sun, Moon, Package, Globe,  Users, GitFork
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useStore } from "@/lib/store";
@@ -21,6 +21,7 @@ const NAV_ITEMS = [
   { href: "/community",   label: "Community",   icon: Globe       },
   { href: "/workspaces",  label: "Workspaces",  icon: Users       },
   { href: "/settings",    label: "Settings",    icon: Settings    },
+  { href: "/forks", label: "My forks", icon: GitFork },
 ];
 
 // ─── Theme hook (shared with dashboard) ──────────────────────────────────────
