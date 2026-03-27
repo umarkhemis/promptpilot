@@ -7,7 +7,8 @@ import { PromptInput } from "@/components/prompt-input";
 import { PromptOutput } from "@/components/prompt-output";
 import { ToolCard } from "@/components/tool-card";
 import { ClarifyingQuestions } from "@/components/clarifying-questions";
-import { PublishModal } from "@/components/publish-modal"; // ✅ correct import, not from page file
+import { PublishModal } from "@/components/publish-modal"; 
+import { PromptScore } from "@/components/prompt-score";
 import { useStore } from "@/lib/store";
 import { improvePromptStream, getToolRecommendation } from "@/lib/api";
 import {
@@ -71,6 +72,8 @@ export default function DashboardPage() {
   const [showContext, setShowContext] = useState(false);
   const [promptCount, setPromptCount] = useState(0);
   const [showPublish, setShowPublish] = useState(false);
+  const [scores, setScores] = useState(null)
+  
 
   useEffect(() => {
     const stored = parseInt(localStorage.getItem("pp-prompt-count") || "0", 10);
@@ -233,6 +236,8 @@ export default function DashboardPage() {
 
               <PromptOutput output={output} isStreaming={isStreaming} />
               <ClarifyingQuestions questions={clarifyingQuestions} onSubmit={handleAnswers} loading={isStreaming} />
+              <PromptScore scores={scores} isLoading={isStreaming} />
+
 
               {output && !isStreaming && (
                 <button onClick={() => setShowPublish(true)}

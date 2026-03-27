@@ -62,7 +62,10 @@ export async function improvePromptStream(
   context: string | undefined,
   onChunk: (chunk: string) => void,
   onDone: () => void,
-  onError: (err: string) => void
+  onError: (err: string) => void,
+  // onScore: ,
+  // event: score
+ 
 ) {
   const token = getToken();
   const headers: Record<string, string> = {

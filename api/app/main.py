@@ -2,8 +2,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
-from app.routers import auth, prompts, tools, templates, history, workspaces, prompt_packs, communitylib 
+from app.routers import auth, prompts, tools, templates, history, workspaces, prompt_packs, communitylib, brand_voice 
 from app.services.llm_client import LLMClient
+
+
 
 
 @asynccontextmanager
@@ -32,6 +34,7 @@ app.include_router(history.router, prefix="/api")
 app.include_router(workspaces.router, prefix="/api")
 app.include_router(prompt_packs.router, prefix="/api")
 app.include_router(communitylib.router, prefix="/api")
+app.include_router(brand_voice.router, prefix="/api")
 
 
 @app.get("/api/health")

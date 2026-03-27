@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink, Zap, ChevronRight, Compass, Check, Copy } from "lucide-react";
+import { ExternalLink, Zap, ChevronRight, Check, Copy } from "lucide-react";
 
 interface ToolCardProps {
   name: string;

@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from sqlalchemy import Column, String, DateTime, JSON
 from sqlalchemy import Uuid
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, relationship
 
 
 class Base(DeclarativeBase):
@@ -18,3 +18,8 @@ class User(Base):
     mode = Column(String, default="student", nullable=False)
     context_profile = Column(JSON, nullable=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    brand_voice_profiles = relationship(
+        "BrandVoiceProfile",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )

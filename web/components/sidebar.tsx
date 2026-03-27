@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, FileText, History, Settings,
+  FileText, History, Settings,
   ChevronLeft, ChevronRight, Wand2, LogOut, Sun, Moon, Package, Globe,  Users, GitFork
 } from "lucide-react";
 import { useState, useEffect } from "react";
